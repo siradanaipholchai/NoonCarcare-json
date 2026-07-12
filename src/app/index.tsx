@@ -1,98 +1,267 @@
-import * as Device from 'expo-device';
-import { Platform, StyleSheet } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
+import { Ionicons, MaterialIcons } from "@expo/vector-icons";
+import {
+  FlatList,
+  Image,
+  StyleSheet,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  View,
+} from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
 
-import { AnimatedIcon } from '@/components/animated-icon';
-import { HintRow } from '@/components/hint-row';
-import { ThemedText } from '@/components/themed-text';
-import { ThemedView } from '@/components/themed-view';
-import { WebBadge } from '@/components/web-badge';
-import { BottomTabInset, MaxContentWidth, Spacing } from '@/constants/theme';
+// 1. นำเข้าข้อมูลรูปภาพล้างรถใหม่ที่คุณเตรียมไว้
+import Carwash1 from "../../assets/images/Carwash1.png";
+import Carwash2 from "../../assets/images/Carwash2.png";
+import Carwash3 from "../../assets/images/Carwash3.png";
 
-function getDevMenuHint() {
-  if (Platform.OS === 'web') {
-    return <ThemedText type="small">use browser devtools</ThemedText>;
-  }
-  if (Device.isDevice) {
-    return (
-      <ThemedText type="small">
-        shake device or press <ThemedText type="code">m</ThemedText> in terminal
-      </ThemedText>
-    );
-  }
-  const shortcut = Platform.OS === 'android' ? 'cmd+m (or ctrl+m)' : 'cmd+d';
-  return (
-    <ThemedText type="small">
-      press <ThemedText type="code">{shortcut}</ThemedText>
-    </ThemedText>
-  );
-}
+const COLORS = {
+  primary: "#2563EB",
+  primaryDark: "#1D4ED8",
+  background: "#FFFFFF",
+  surface: "#F8FAFC",
+  border: "#E2E8F0",
+  text: "#0F172A",
+  textSecondary: "#64748B",
+};
+
+const products = [
+  {
+    id: "1",
+    name: "ล้างรถ 1",
+    price: 1200,
+    category: "Car Wash",
+    image: Carwash1,
+  },
+  {
+    id: "2",
+    name: "ล้างรถ 2",
+    price: 2000,
+    category: "Car Wash",
+    image: Carwash2,
+  },
+  {
+    id: "3",
+    name: "ล้างรถ 3",
+    price: 500,
+    category: "Car Wash",
+    image: Carwash3,
+  },
+];
 
 export default function HomeScreen() {
   return (
-    <ThemedView style={styles.container}>
-      <SafeAreaView style={styles.safeArea}>
-        <ThemedView style={styles.heroSection}>
-          <AnimatedIcon />
-          <ThemedText type="title" style={styles.title}>
-            Welcome to&nbsp;Expo
-          </ThemedText>
-        </ThemedView>
+    <SafeAreaView style={styles.container}>
+      {/* Header - เปลี่ยนหัวข้อเป็นระบบล้างรถ */}
+      <View style={styles.header}>
+        <TouchableOpacity style={styles.iconButton}>
+          <Ionicons name="menu" size={24} color={COLORS.text} />
+        </TouchableOpacity>
+        <Text style={styles.headerTitle}>ระบบล้างรถ</Text>
+        <TouchableOpacity style={styles.profileButton}>
+          <Ionicons name="person" size={18} color="#fff" />
+        </TouchableOpacity>
+      </View>
 
-        <ThemedText type="code" style={styles.code}>
-          get started
-        </ThemedText>
-
-        <ThemedView type="backgroundElement" style={styles.stepContainer}>
-          <HintRow
-            title="Try editing"
-            hint={<ThemedText type="code">src/app/index.tsx</ThemedText>}
+      {/* Search */}
+      <View style={styles.searchRow}>
+        <View style={styles.searchBox}>
+          <Ionicons name="search" size={18} color={COLORS.textSecondary} />
+          <TextInput
+            placeholder="ค้นหาบริการ..."
+            placeholderTextColor={COLORS.textSecondary}
+            style={styles.input}
           />
-          <HintRow title="Dev tools" hint={getDevMenuHint()} />
-          <HintRow
-            title="Fresh start"
-            hint={<ThemedText type="code">npm run reset-project</ThemedText>}
-          />
-        </ThemedView>
+        </View>
+        <TouchableOpacity style={styles.addButton}>
+          <Text style={styles.addButtonText}>+ เพิ่มบริการ</Text>
+        </TouchableOpacity>
+      </View>
 
-        {Platform.OS === 'web' && <WebBadge />}
-      </SafeAreaView>
-    </ThemedView>
+      {/* Filter */}
+      <View style={styles.filterRow}>
+        <TouchableOpacity style={styles.filterButton}>
+          <Text style={styles.filterText}>ตัวกรอง ▼ </Text>
+        </TouchableOpacity>
+      </View>
+
+      {/* Product Area - ปรับให้แสดงหมวดหมู่แทนแบรนด์สินค้าเดิม */}
+      <FlatList
+        data={products}
+        keyExtractor={(item) => item.id}
+        contentContainerStyle={{ padding: 16 }}
+        renderItem={({ item }) => (
+          <View style={styles.card}>
+            <Image source={item.image} style={styles.image} />
+            <Text style={styles.name}>{item.name}</Text>
+            <Text style={styles.brand}>{item.category}</Text>
+            <Text style={styles.price}>{item.price.toLocaleString()} บาท</Text>
+          </View>
+        )}
+      />
+
+      {/* Bottom Navigation */}
+      <View style={styles.bottomNav}>
+        <TouchableOpacity style={styles.navItem}>
+          <Ionicons name="home" size={24} color={COLORS.textSecondary} />
+          <Text style={styles.navText}>หน้าแรก</Text>
+        </TouchableOpacity>
+
+        <TouchableOpacity style={styles.navItem}>
+          <Ionicons name="add-circle" size={30} color={COLORS.primary} />
+          <Text
+            style={[
+              styles.navText,
+              { color: COLORS.primary, fontWeight: "600" },
+            ]}
+          >
+            เพิ่ม
+          </Text>
+        </TouchableOpacity>
+
+        <TouchableOpacity style={styles.navItem}>
+          <MaterialIcons name="inventory-2" size={24} color={COLORS.primary} />
+          <Text
+            style={[
+              styles.navText,
+              { color: COLORS.primary, fontWeight: "600" },
+            ]}
+          >
+            บริการ
+          </Text>
+        </TouchableOpacity>
+
+        <TouchableOpacity style={styles.navItem}>
+          <Ionicons name="folder" size={24} color={COLORS.textSecondary} />
+          <Text style={styles.navText}>หมวดหมู่</Text>
+        </TouchableOpacity>
+      </View>
+    </SafeAreaView>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: 'center',
-    flexDirection: 'row',
+    backgroundColor: COLORS.background,
   },
-  safeArea: {
+  header: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+    paddingHorizontal: 20,
+    paddingVertical: 18,
+    backgroundColor: COLORS.background,
+    borderBottomWidth: 1,
+    borderBottomColor: COLORS.border,
+  },
+  headerTitle: {
+    fontSize: 24,
+    fontWeight: "700",
+    color: COLORS.primary,
+  },
+  iconButton: {
+    width: 36,
+    alignItems: "center",
+  },
+  profileButton: {
+    width: 38,
+    height: 38,
+    borderRadius: 19,
+    backgroundColor: COLORS.primary,
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  searchRow: {
+    flexDirection: "row",
+    alignItems: "center",
+    paddingHorizontal: 18,
+    paddingTop: 18,
+  },
+  searchBox: {
     flex: 1,
-    paddingHorizontal: Spacing.four,
-    alignItems: 'center',
-    gap: Spacing.three,
-    paddingBottom: BottomTabInset + Spacing.three,
-    maxWidth: MaxContentWidth,
+    flexDirection: "row",
+    alignItems: "center",
+    backgroundColor: COLORS.surface,
+    borderRadius: 12,
+    borderWidth: 1,
+    borderColor: COLORS.border,
+    paddingHorizontal: 12,
+    height: 48,
   },
-  heroSection: {
-    alignItems: 'center',
-    justifyContent: 'center',
+  input: {
     flex: 1,
-    paddingHorizontal: Spacing.four,
-    gap: Spacing.four,
+    marginLeft: 8,
+    color: COLORS.text,
   },
-  title: {
-    textAlign: 'center',
+  addButton: {
+    marginLeft: 12,
+    backgroundColor: COLORS.primary,
+    paddingHorizontal: 18,
+    height: 48,
+    borderRadius: 12,
+    justifyContent: "center",
+    elevation: 2,
   },
-  code: {
-    textTransform: 'uppercase',
+  addButtonText: {
+    color: "#fff",
+    fontWeight: "700",
   },
-  stepContainer: {
-    gap: Spacing.three,
-    alignSelf: 'stretch',
-    paddingHorizontal: Spacing.three,
-    paddingVertical: Spacing.four,
-    borderRadius: Spacing.four,
+  filterRow: {
+    paddingHorizontal: 18,
+    paddingTop: 15,
+  },
+  filterButton: {
+    alignSelf: "flex-end",
+  },
+  filterText: {
+    color: COLORS.primary,
+    fontWeight: "600",
+    fontSize: 15,
+  },
+  card: {
+    backgroundColor: "#fff",
+    borderRadius: 16,
+    padding: 14,
+    marginVertical: 8,
+    borderWidth: 1,
+    borderColor: COLORS.border,
+  },
+  image: {
+    width: "100%",
+    height: 180,
+    resizeMode: "contain",
+  },
+  name: {
+    marginTop: 10,
+    fontSize: 18,
+    fontWeight: "700",
+    color: COLORS.text,
+  },
+  brand: {
+    color: COLORS.textSecondary,
+    marginTop: 4,
+  },
+  price: {
+    marginTop: 8,
+    fontSize: 18,
+    fontWeight: "700",
+    color: COLORS.primary,
+  },
+  bottomNav: {
+    flexDirection: "row",
+    backgroundColor: COLORS.background,
+    borderTopWidth: 1,
+    borderTopColor: COLORS.border,
+    paddingVertical: 12,
+  },
+  navItem: {
+    flex: 1,
+    alignItems: "center",
+  },
+  navText: {
+    marginTop: 4,
+    fontSize: 12,
+    color: COLORS.textSecondary,
   },
 });
