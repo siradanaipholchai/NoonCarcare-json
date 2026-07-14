@@ -1,0 +1,38 @@
+[
+  {
+    "id": "1",
+    "name": "ล้างรถภายนอก",
+    "price": 300,
+    "stock": 20,
+    "stock_text": "20 คิวว่าง",
+    "category": "Car Wash",
+    "location_count": 1,
+    "location_text": "สาขาหลัก",
+    "badge_status": "Available",
+    "image_url": "https://images.unsplash.com/photo-1607860108855-64acf2078ed9"
+  },
+  {
+    "id": "2",
+    "name": "ล้างรถ + ดูดฝุ่น",
+    "price": 500,
+    "stock": 8,
+    "stock_text": "8 คิวว่าง",
+    "category": "Car Wash",
+    "location_count": 2,
+    "location_text": "2 สาขา",
+    "badge_status": "Available",
+    "image_url": "https://images.unsplash.com/photo-1503376780353-7e6692767b70"
+  },
+  {
+    "id": "3",
+    "name": "เคลือบสีรถ",
+    "price": 1200,
+    "stock": 3,
+    "stock_text": "3 คิวสุดท้าย",
+    "category": "Car Care",
+    "location_count": 1,
+    "location_text": "สาขาหลัก",
+    "badge_status": "Low in stock",
+    "image_url": "https://images.unsplash.com/photo-1492144534655-ae79c964c9d7"
+  }
+]
