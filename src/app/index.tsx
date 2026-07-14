@@ -1,4 +1,5 @@
 import { Ionicons, MaterialIcons } from "@expo/vector-icons";
+import { useEffect, useState } from "react";
 import {
   FlatList,
   Image,
@@ -10,11 +11,21 @@ import {
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
-// 1. นำเข้าข้อมูลรูปภาพล้างรถใหม่ที่คุณเตรียมไว้
-import Carwash1 from "../../assets/images/Carwash1.png";
-import Carwash2 from "../../assets/images/Carwash2.png";
-import Carwash3 from "../../assets/images/Carwash3.png";
+const GITHUB_JSON_URL =
+  "https://raw.githubusercontent.com/siradanaipholchai/NoonCarcare-json/main/products.json";
 
+interface Product {
+  id: string;
+  name: string;
+  price: number;
+  stock: number;
+  stock_text: string;
+  category: string;
+  location_count: number;
+  location_text: string;
+  badge_status: string;
+  image_url: string;
+}
 const COLORS = {
   primary: "#2563EB",
   primaryDark: "#1D4ED8",
@@ -25,31 +36,23 @@ const COLORS = {
   textSecondary: "#64748B",
 };
 
-const products = [
-  {
-    id: "1",
-    name: "ล้างรถ 1",
-    price: 1200,
-    category: "Car Wash",
-    image: Carwash1,
-  },
-  {
-    id: "2",
-    name: "ล้างรถ 2",
-    price: 2000,
-    category: "Car Wash",
-    image: Carwash2,
-  },
-  {
-    id: "3",
-    name: "ล้างรถ 3",
-    price: 500,
-    category: "Car Wash",
-    image: Carwash3,
-  },
-];
-
 export default function HomeScreen() {
+  const [products, setProducts] = useState<Product[]>([]);
+
+  const fetchProducts = async () => {
+    try {
+      const response = await fetch(GITHUB_JSON_URL);
+      const data: Product[] = await response.json();
+      setProducts(data);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  useEffect(() => {
+    fetchProducts();
+  }, []);
+
   return (
     <SafeAreaView style={styles.container}>
       {/* Header - เปลี่ยนหัวข้อเป็นระบบล้างรถ */}
@@ -92,7 +95,7 @@ export default function HomeScreen() {
         contentContainerStyle={{ padding: 16 }}
         renderItem={({ item }) => (
           <View style={styles.card}>
-            <Image source={item.image} style={styles.image} />
+            <Image source={{ uri: item.image_url }} style={styles.image} />
             <Text style={styles.name}>{item.name}</Text>
             <Text style={styles.brand}>{item.category}</Text>
             <Text style={styles.price}>{item.price.toLocaleString()} บาท</Text>
@@ -265,3 +268,4 @@ const styles = StyleSheet.create({
     color: COLORS.textSecondary,
   },
 });
+//uodate json2nd
